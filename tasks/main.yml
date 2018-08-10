@@ -1,0 +1,10 @@
+---
+
+- set_fact:
+    device_path: '/dev/mapper/fedora-root'
+
+- set_fact:
+    disks: ['vdc']
+
+- name: Verify the previously run role
+  include_tasks: "verify-mount.yml"

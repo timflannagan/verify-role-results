@@ -1,0 +1,11 @@
+---
+- hosts: localhost
+  become: true
+
+  tasks:
+    - include_role:
+        name: ../verify-role-results
+      vars:
+        device_type: 'lvm'
+        disks: ['vdc']
+        state: 'present'
