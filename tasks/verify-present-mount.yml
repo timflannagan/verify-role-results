@@ -22,6 +22,11 @@
 
 - set_fact:
     device_full_path: "/dev/mapper/{{ lvm_vg}}-{{ device_name }}"
+  when: device_type == "lvm"
+
+- set_fact:
+    device_full_path: "/dev/{{ disks[0] }}"
+  when: device_type == "disk"
 
 - name: Run lsblk command
   block:
@@ -40,6 +45,6 @@
 
 - name: Ensure specified fs_type matches the filtered lsblk buffer
   assert:
-    that: lsblk_fs_type == fs_type
+    that: extract_fs_type == fs_type
     msg: "lsblk has the fs-type {{ extract_fs_type }}, but the playbook ran with {{ fs_type }} fs-type."
   when: device_type == "lvm" and state == "present"

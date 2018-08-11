@@ -13,7 +13,7 @@
     device_name: 'root'
 
 - set_fact:
-    fs_type: 'xfs'
+    fs_type: 'ext4'
 
 - name: Verify the previously run role results (present)
   include_tasks: "verify-present-mount.yml"
