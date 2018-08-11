@@ -3,3 +3,19 @@
 #
 # Verify absent device mount when the state variable is set to "absent"
 #
+- name: Ensure that the device is not present in /etc/fstab
+  shell: cat /etc/fstab
+  register: fstab_buf
+  when: state == "absent"
+
+- name: Verify that {{ device_path }} is not present in /etc/fstab
+  assert:
+    that: fstab_buf.stdout_lines.find(device_name) == -1
+    msg: Error: {{ device_path }} is present in /etc/fstab.
+  when: device_type == "lvm"
+
+- name: Verify that {{ disks[0] }} is not present in /etc/fstab
+  assert:
+    that: fstab_buf.stdout_lines.find(disks[0]) == -1
+    msg: Error: {{ disks[0] }} is present in /etc/fstab.
+  when: device_type == "disk"
