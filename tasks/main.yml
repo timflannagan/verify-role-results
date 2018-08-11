@@ -6,5 +6,19 @@
 - set_fact:
     disks: ['vdc']
 
-- name: Verify the previously run role
-  include_tasks: "verify-mount.yml"
+- set_fact:
+    lvm_vg: 'fedora'
+
+- set_fact:
+    device_name: 'root'
+
+- set_fact:
+    fs_type: 'xfs'
+
+- name: Verify the previously run role results (present)
+  include_tasks: "verify-present-mount.yml"
+  when: state == "present"
+
+- name: Verify the previously run role results (absent)
+  include_tasks: "verify-absent-mount.yml"
+  when: state == "absent"

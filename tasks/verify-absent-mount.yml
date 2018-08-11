@@ -1,0 +1,5 @@
+---
+
+#
+# Verify absent device mount when the state variable is set to "absent"
+#
