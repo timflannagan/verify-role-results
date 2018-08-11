@@ -6,4 +6,6 @@ Purpose:
 To-Do:
 ===========
 1. Run verify-present-mount.yml in a VM to check that disk verification works
-2. Add support for verifying absent devices in verify-absent-mount.yml
+3. Figure out if conditional checks are necessary in the verify-* files
+4. Figure out if only checking for an absent device in /etc/fstab is enough
+   for verifying an absent device

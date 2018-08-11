@@ -11,7 +11,7 @@
 - name: Verify that device_path is in /etc/fstab file
   assert:
     that: fstab_buf.stdout.find(device_path) != -1
-    msg: "{{ device_path }} is not present in /etc/fstab file."
+    msg: "Error: {{ device_path }} is not present in /etc/fstab file."
   when: device_type == "lvm" and state == "present"
 
 - name: Verify that specified disk is in /etc/fstab file
