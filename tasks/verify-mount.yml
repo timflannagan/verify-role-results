@@ -1,5 +1,8 @@
 ---
 
+#
+# Verify present device mount when the state variable is set to "present"
+#
 - name: Read the /etc/fstab file
   shell: cat /etc/fstab
   register: fstab_buf
@@ -16,3 +19,40 @@
     that: fstab_buf.stdout.find(disks[0]) != -1
     msg: "{{ disks[0] }} is not present in /etc/fstab file."
   when: device_type == "disk" and state == "present"
+
+# - set_fact:
+#     device_full_name: "{{ lvm_vg }}-{{ device_name }}"
+
+- set_fact:
+    device_full_path: "/dev/mapper/{{ lvm_vg}}-{{ device_name }}"
+
+- name: Run lsblk command
+  block:
+    - shell: "lsblk -fn {{ device_full_path }} -o name,fstype"
+      register: lsblk_buf
+  rescue:
+    - debug:
+        msg: "Lsblk command failed to run"
+  when: state == "present"
+
+- set_fact:
+    extracted_name: "{{ lsblk_buf.stdout.split(' ')[0] }}"
+
+- set_fact:
+    extract_fs_type: "{{ lsblk_buf.stdout.split(' ')[1] }}"
+
+# - name: Ensure lvm_vg-device_name is present in lsblk buffer
+#   assert:
+#     that: lsblk_buf.stdout.find(device_full_name) != -1
+#     msg: "{{ device_full_name }} was not found in lsblk command output"
+#   when: device_type == "lvm" and state == "present"
+
+- name: Ensure specified fs_type matches the filtered lsblk buffer
+  assert:
+    that: lsblk_fs_type == fs_type
+    msg: "lsblk has the fs-type {{ extract_fs_type }}, but the playbook ran with {{ fs_type }} fs-type."
+  when: device_type == "lvm" and state == "present"
+
+#
+# Verify absent device mount when the state variable is set to "absent"
+#
