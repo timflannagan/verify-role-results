@@ -1,5 +1,7 @@
 ---
-
+#
+# Set facts to use in verification function
+#
 - set_fact:
     device_path: '/dev/mapper/fedora-root'
 
@@ -15,6 +17,9 @@
 - set_fact:
     fs_type: 'ext4'
 
+#
+# Run the verification functions
+#
 - name: Verify the previously run role results (present)
   include_tasks: "verify-present-mount.yml"
   when: state == "present"
