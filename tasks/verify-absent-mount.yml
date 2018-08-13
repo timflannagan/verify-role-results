@@ -10,12 +10,12 @@
 
 - name: Verify that {{ device_path }} is not present in /etc/fstab
   assert:
-    that: fstab_buf.stdout_lines.find(device_name) == -1
-    msg: Error: {{ device_path }} is present in /etc/fstab.
+    that: fstab_buf.stdout.find(device_name) == -1
+    msg: "{{ device_path }} is present in /etc/fstab."
   when: device_type == "lvm"
 
 - name: Verify that {{ disks[0] }} is not present in /etc/fstab
   assert:
-    that: fstab_buf.stdout_lines.find(disks[0]) == -1
-    msg: Error: {{ disks[0] }} is present in /etc/fstab.
+    that: fstab_buf.stdout.find(disks[0]) == -1
+    msg: "{{ disks[0] }} is present in /etc/fstab."
   when: device_type == "disk"
